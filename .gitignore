@@ -208,3 +208,5 @@ custom_data_pipeline/allen_key/custom_error_analysis copy 2.ipynb
 custom_data_pipeline/allen_key/validation_dataset
 custom_data_pipeline/allen_key/old_dataset
 custom_data_pipeline/allen_key/custom_offline_inference.py
+
+models
