@@ -23,7 +23,7 @@ Custom converters expect HDF5 files with:
 /obs/gripper_qpos
 ```
 
-They write UMI-style zarr keys:
+And then they write UMI-style zarr keys as:
 
 ```text
 camera0_rgb
@@ -64,7 +64,7 @@ custom_data_pipeline/inspect_zarr.py
 
 ## Training
 
-Training uses the official `train.py`. I created these 2 new conda enviroments depending on the GPU used:
+Training uses the official `train.py`. I created these new conda environments depending on the GPU used:
 
 ```bash
 # H200 from NCSA
@@ -81,15 +81,15 @@ python train.py --config-name=train_diffusion_unet_timm_umi_workspace task.datas
 
 The training parameters can be changed in the `diffusion_policy/config/task/umi.yaml` file. Currently, the downsampling is kept at the original value of 3. However, if you are using an already downsampled dataset, change that value to 1 in `obs_down_sample_steps: 1 # 3, 1`.
 
-Also note that the epochs is changed to 400, and the batch size is kept at 64.
+Also note that the epochs are changed to 400, and the batch size is kept at 64.
 
 ## Inference
 
 ### ROS 2
 
-`inference_umi.py` is the custom ROS deployment script.
+`inference_umi.py` is the custom ROS 2 deployment script. It has been modified to match the new execution scripts after the parallel threads change to inference. Additionally, the `stream_realsense_utils.py` utility script is used, and the `inference_umi_reference.py` is the unmodified reference script used to create `inference_umi.py`.
 
-It subscribes to `/robot_pose` and `/gripper_width`, then publishes `/robot_target_pose` and `/gripper_target_width`.
+To build the environment for inference, run:
 
 ```bash
 conda env create -f conda_environment_ros_humble_inference.yaml
@@ -104,7 +104,7 @@ Then, start the low-level ROS control scripts, and you can run inference with:
 python inference_umi.py --ckpt_path checkpoints/latest.ckpt --results_path data/turn_knob_ros_logs
 ```
 
-Note that the gripper conversion uses `MAX_GRIPPER_WIDTH = 110.0` and `DATASET_MAX_GRIPPER_WIDTH_M = 0.09`.
+Note that the gripper conversion uses `MAX_GRIPPER_WIDTH = 85.0` and `DATASET_MAX_GRIPPER_WIDTH_M = 0.09`. If another dataset is used with a different max width, then these values need to be changed.
 
 ### Direct Scripts
 
